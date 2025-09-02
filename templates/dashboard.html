@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard PUMK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            background-image: url('/static/bg-pattern.svg');
+            background-attachment: fixed;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chart-container {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .chart-container:hover {
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        th {
+            background-color: rgba(248, 250, 252, 0.8);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #475569;
+            backdrop-filter: blur(4px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td, th {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        
+        tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        tr:hover {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.4);
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background-image: linear-gradient(to right, #3b82f6, #2563eb);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Input styles */
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        PUMK Dashboard
+                    </span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm font-medium text-gray-700">{{ session.get('name', 'User') }}</span>
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur opacity-30"></div>
+                            <img class="relative h-9 w-9 rounded-full bg-white border-2 border-white shadow-md" 
+                                 src="https://ui-avatars.com/api/?name={{ session.get('name', 'User') }}&background=random" 
+                                 alt="User avatar">
+                        </div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Keluar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate__animated animate__fadeIn">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat-card rounded-xl overflow-hidden animate__animated animate__fadeInUp">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-xl"></div>
+                            <div class="relative w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="text-sm font-medium text-gray-500 mb-1">Total Mitra Binaan</h5>
+                            <div class="flex items-baseline">
+                                <h3 class="text-2xl font-bold text-gray-900">{{ stats.total_mitra }}</h3>
+                                <span class="ml-2 text-sm font-medium text-blue-600">Mitra</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card rounded-xl overflow-hidden animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-green-500/20 rounded-full blur-xl"></div>
+                            <div class="relative w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="text-sm font-medium text-gray-500 mb-1">Total Realisasi</h5>
+                            <div class="flex items-baseline">
+                                <h3 class="text-2xl font-bold text-gray-900">Rp {{ '{:,.0f}'.format(stats.total_realisasi) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card rounded-xl overflow-hidden animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-amber-500/20 rounded-full blur-xl"></div>
+                            <div class="relative w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="text-sm font-medium text-gray-500 mb-1">Total Outstanding</h5>
+                            <div class="flex items-baseline">
+                                <h3 class="text-2xl font-bold text-gray-900">Rp {{ '{:,.0f}'.format(stats.total_outstanding) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolektabilitas Chart -->
+        <div class="dashboard-card rounded-xl p-6 mb-8 animate__animated animate__fadeInUp animate__delay-3s">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h5 class="text-lg font-bold text-gray-900 mb-1">Distribusi Kolektabilitas</h5>
+                    <p class="text-sm text-gray-500">Ringkasan status kolektabilitas mitra binaan</p>
+                </div>
+                <div class="bg-blue-50 rounded-lg px-4 py-2 flex items-center">
+                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span class="text-sm font-medium text-blue-700">Statistik</span>
+                </div>
+            </div>
+            <div class="relative h-[300px] chart-container">
+                <canvas id="kolektabilitasChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="dashboard-card animate__animated animate__fadeInUp animate__delay-4s">
+            <div class="p-6 border-b border-gray-100/50">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                    <div>
+                        <h4 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-1">
+                            Report Data Nominatif Penyaluran PUMK
+                        </h4>
+                        <p class="text-sm text-gray-500">Detail informasi penyaluran dana untuk setiap mitra binaan</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative group">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-200"></div>
+                            <input type="text" 
+                                   id="searchInput" 
+                                   placeholder="Cari data..." 
+                                   class="relative pl-10 pr-4 py-2.5 w-64 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="{{ url_for('export_excel') }}" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-medium rounded-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-sm transition-all duration-200">
+                                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export Excel
+                            </a>
+                            <button onclick="exportCSV()" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all duration-200">
+                                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto bg-white/50 backdrop-blur-sm rounded-lg">
+                                <table id="mitraTable" class="min-w-full table-auto">
+                                    <thead>
+                                        <tr>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">No</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50 whitespace-nowrap">Nama Mitra</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Alamat</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Provinsi</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Kabupaten/Kota</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Jumlah Realisasi</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Outstanding</th>
+                                            <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Kolektabilitas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white/50 backdrop-blur-sm divide-y divide-gray-200/50">
+                                        {% for row in mitra %}
+                                        <tr class="hover:bg-blue-50/50 transition-colors duration-200">
+                                            <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ row.No }}</td>
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ row.Nama_Mitra_Binaan }}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 max-w-md truncate">{{ row.Alamat }}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">{{ row.Provinsi }}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">{{ row.Kabupaten_Kota }}</td>
+                                            <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                                                <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                                    Rp {{ '{:,.0f}'.format(row.Jumlah_Realisasi_Rp) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                                                <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                                    Rp {{ '{:,.0f}'.format(row.Outstanding_Rp) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium shadow-sm
+                                                    {% if row.Kolektabilitas_BUMN == 'Lancar' %}
+                                                        bg-gradient-to-r from-green-500 to-emerald-500 text-white
+                                                    {% elif row.Kolektabilitas_BUMN == 'Dalam Perhatian Khusus' %}
+                                                        bg-gradient-to-r from-yellow-500 to-amber-500 text-white
+                                                    {% elif row.Kolektabilitas_BUMN == 'Kurang Lancar' %}
+                                                        bg-gradient-to-r from-orange-500 to-amber-600 text-white
+                                                    {% else %}
+                                                        bg-gradient-to-r from-red-500 to-rose-500 text-white
+                                                    {% endif %}">
+                                                    {{ row.Kolektabilitas_BUMN }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Table functionality
+            const table = document.getElementById('mitraTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            let filteredRows = [...rows];
+            
+            // Create pagination container
+            const paginationContainer = document.createElement('div');
+            paginationContainer.className = 'flex items-center justify-between p-4 border-t border-gray-100';
+            table.parentNode.appendChild(paginationContainer);
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                filteredRows = rows.filter(row => {
+                    return Array.from(row.cells).some(cell => 
+                        cell.textContent.toLowerCase().includes(searchTerm)
+                    );
+                });
+                currentPage = 1;
+                showPage(currentPage);
+                updatePagination();
+            });
+
+            function showPage(page) {
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                // Hide all rows first
+                rows.forEach(row => row.style.display = 'none');
+                
+                // Show only filtered rows for current page
+                filteredRows.slice(start, end).forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                paginationContainer.innerHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="text-sm text-gray-700">
+                            Menampilkan <span class="font-medium">${Math.min(filteredRows.length, (currentPage - 1) * itemsPerPage + 1)}</span>
+                            hingga <span class="font-medium">${Math.min(filteredRows.length, currentPage * itemsPerPage)}</span>
+                            dari <span class="font-medium">${filteredRows.length}</span> data
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="previousPage()" 
+                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}"
+                                    ${currentPage === 1 ? 'disabled' : ''}>
+                                Sebelumnya
+                            </button>
+                            <button onclick="nextPage()"
+                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}"
+                                    ${currentPage === totalPages ? 'disabled' : ''}>
+                                Selanjutnya
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            window.previousPage = function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                    updatePagination();
+                }
+            };
+
+            window.nextPage = function() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                    updatePagination();
+                }
+            };
+
+            // Initialize table
+            showPage(1);
+            updatePagination();
+
+            // Show initial page
+            showPage(1);
+            updatePagination();
+
+            // Initialize Kolektabilitas Chart
+            const kolektabilitasData = {{ kolektabilitas|tojson|safe }};
+            const labels = kolektabilitasData.map(k => k.Kolektabilitas_BUMN);
+            const counts = kolektabilitasData.map(k => k.count);
+
+            new Chart(document.getElementById('kolektabilitasChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Mitra',
+                        data: counts,
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',  // Gradient green for Lancar
+                            'rgba(245, 158, 11, 0.8)',  // Gradient yellow for DPK
+                            'rgba(249, 115, 22, 0.8)',  // Gradient orange for Kurang Lancar
+                            'rgba(239, 68, 68, 0.8)'    // Gradient red for others
+                        ],
+                        borderColor: [
+                            'rgb(4, 120, 87)',
+                            'rgb(180, 83, 9)',
+                            'rgb(194, 65, 12)',
+                            'rgb(185, 28, 28)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#4b5563',
+                            padding: 12,
+                            boxPadding: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: '600',
+                                family: "'Plus Jakarta Sans', sans-serif"
+                            },
+                            bodyFont: {
+                                size: 13,
+                                family: "'Plus Jakarta Sans', sans-serif"
+                            },
+                            borderColor: 'rgba(229, 231, 235, 0.5)',
+                            borderWidth: 1,
+                            displayColors: true,
+                            boxWidth: 8,
+                            boxHeight: 8,
+                            usePointStyle: true,
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    return ' ' + context.formattedValue + ' Mitra';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(229, 231, 235, 0.4)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Plus Jakarta Sans', sans-serif",
+                                    size: 12
+                                },
+                                color: '#6b7280',
+                                padding: 8
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Plus Jakarta Sans', sans-serif",
+                                    size: 12
+                                },
+                                color: '#6b7280',
+                                padding: 8
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+        // Function to export table data to CSV
+        function exportCSV() {
+            const table = document.getElementById('mitraTable');
+            const rows = table.querySelectorAll('tr');
+            const csvContent = [];
+            
+            // Get headers
+            const headers = [];
+            rows[0].querySelectorAll('th').forEach(header => {
+                headers.push(header.textContent.trim());
+            });
+            csvContent.push(headers.join(','));
+            
+            // Get data rows
+            for (let i = 0; i < filteredRows.length; i++) {
+                const row = [];
+                filteredRows[i].querySelectorAll('td').forEach(cell => {
+                    // Clean the cell text (remove currency symbol, commas in numbers, etc)
+                    let text = cell.textContent.trim().replace('Rp ', '').replace(/,/g, '');
+                    // If the cell contains a comma, wrap it in quotes
+                    if (text.includes(',')) {
+                        text = `"${text}"`;
+                    }
+                    row.push(text);
+                });
+                csvContent.push(row.join(','));
+            }
+            
+            // Create and trigger download
+            const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', `pumk_data_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
