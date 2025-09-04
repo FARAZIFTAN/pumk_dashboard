@@ -220,6 +220,27 @@ def dashboard():
                          stats=stats,
                          kolektabilitas=kolektabilitas)
 
+@app.route('/mitra-binaan')
+@login_required
+def mitra_binaan():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM mitra_binaan ORDER BY No')
+    mitra = cursor.fetchall()
+    return render_template('mitra_binaan.html', mitra=mitra)
+
+@app.route('/keuangan')
+@login_required
+def keuangan():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # Get summary statistics
+    stats, kolektabilitas = get_summary_stats()
+    return render_template('keuangan.html', stats=stats, kolektabilitas=kolektabilitas)
+
+@app.route('/laporan')
+@login_required
+def laporan():
+    return render_template('laporan.html')
+
 @app.route('/api/filter')
 def filter_data():
     provinsi = request.args.get('provinsi')

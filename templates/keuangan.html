@@ -1,0 +1,134 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate__animated animate__fadeIn">
+    <div class="stat-card rounded-xl overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-xl"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-medium text-gray-500 mb-1">Total Mitra Binaan</h5>
+                    <div class="flex items-baseline">
+                        <h3 class="text-2xl font-bold text-gray-900">{{ stats.total_mitra }}</h3>
+                        <span class="ml-2 text-sm font-medium text-blue-600">Mitra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card rounded-xl overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-green-500/20 rounded-full blur-xl"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-medium text-gray-500 mb-1">Total Realisasi</h5>
+                    <div class="flex items-baseline">
+                        <h3 class="text-2xl font-bold text-gray-900">Rp {{ '{:,.0f}'.format(stats.total_realisasi) }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card rounded-xl overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-amber-500/20 rounded-full blur-xl"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h5 class="text-sm font-medium text-gray-500 mb-1">Total Outstanding</h5>
+                    <div class="flex items-baseline">
+                        <h3 class="text-2xl font-bold text-gray-900">Rp {{ '{:,.0f}'.format(stats.total_outstanding) }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-card rounded-xl p-6 mb-8 animate__animated animate__fadeInUp">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h5 class="text-lg font-bold text-gray-900 mb-1">Distribusi Kolektabilitas</h5>
+            <p class="text-sm text-gray-500">Ringkasan status kolektabilitas mitra binaan</p>
+        </div>
+        <div class="bg-blue-50 rounded-lg px-4 py-2 flex items-center">
+            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span class="text-sm font-medium text-blue-700">Statistik</span>
+        </div>
+    </div>
+    <div class="relative h-[300px] chart-container">
+        <canvas id="kolektabilitasChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kolektabilitasData = {{ kolektabilitas|tojson|safe }};
+        const labels = kolektabilitasData.map(k => k.Kolektabilitas_BUMN);
+        const counts = kolektabilitasData.map(k => k.count);
+
+        new Chart(document.getElementById('kolektabilitasChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Mitra',
+                    data: counts,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(249, 115, 22, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(4, 120, 87)',
+                        'rgb(180, 83, 9)',
+                        'rgb(194, 65, 12)',
+                        'rgb(185, 28, 28)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

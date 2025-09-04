@@ -1,0 +1,69 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="dashboard-card animate__animated animate__fadeIn">
+    <div class="p-6 border-b border-gray-100/50">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+            <div>
+                <h4 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-1">
+                    Data Mitra Binaan
+                </h4>
+                <p class="text-sm text-gray-500">Daftar lengkap mitra binaan PUMK</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-200"></div>
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Cari mitra..." 
+                           class="relative pl-10 pr-4 py-2.5 w-64 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="overflow-x-auto bg-white/50 backdrop-blur-sm rounded-lg">
+        <table id="mitraTable" class="min-w-full table-auto">
+            <thead>
+                <tr>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">No</th>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Nama Mitra</th>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Alamat</th>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Provinsi</th>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Kabupaten/Kota</th>
+                    <th class="sticky top-0 bg-gray-50/90 backdrop-blur-sm px-6 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200/50">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white/50 backdrop-blur-sm divide-y divide-gray-200/50">
+                {% for row in mitra %}
+                <tr class="hover:bg-blue-50/50 transition-colors duration-200">
+                    <td class="px-6 py-4 text-sm text-gray-900">{{ row.No }}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ row.Nama_Mitra_Binaan }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600 max-w-md truncate">{{ row.Alamat }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">{{ row.Provinsi }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">{{ row.Kabupaten_Kota }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium shadow-sm
+                            {% if row.Kolektabilitas_BUMN == 'Lancar' %}
+                                bg-gradient-to-r from-green-500 to-emerald-500 text-white
+                            {% elif row.Kolektabilitas_BUMN == 'Dalam Perhatian Khusus' %}
+                                bg-gradient-to-r from-yellow-500 to-amber-500 text-white
+                            {% elif row.Kolektabilitas_BUMN == 'Kurang Lancar' %}
+                                bg-gradient-to-r from-orange-500 to-amber-600 text-white
+                            {% else %}
+                                bg-gradient-to-r from-red-500 to-rose-500 text-white
+                            {% endif %}">
+                            {{ row.Kolektabilitas_BUMN }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
