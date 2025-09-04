@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if action == 'add' %}
+Tambah Mitra Binaan
+{% else %}
+Edit Mitra Binaan
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {% if action == 'add' %}
+                        <i class="fas fa-plus"></i> Tambah Mitra Binaan Baru
+                        {% else %}
+                        <i class="fas fa-edit"></i> Edit Mitra Binaan
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Regional_Office">Regional Office</label>
+                                    <input type="text" class="form-control" id="Regional_Office" name="Regional_Office"
+                                           value="{{ mitra.Regional_Office if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Kantor_Cabang">Kantor Cabang</label>
+                                    <input type="text" class="form-control" id="Kantor_Cabang" name="Kantor_Cabang"
+                                           value="{{ mitra.Kantor_Cabang if mitra else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Kode_Unit">Kode Unit</label>
+                                    <input type="text" class="form-control" id="Kode_Unit" name="Kode_Unit"
+                                           value="{{ mitra.Kode_Unit if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="BRI_Unit">BRI Unit</label>
+                                    <input type="text" class="form-control" id="BRI_Unit" name="BRI_Unit"
+                                           value="{{ mitra.BRI_Unit if mitra else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Nama_Mitra_Binaan">Nama Mitra Binaan</label>
+                            <input type="text" class="form-control" id="Nama_Mitra_Binaan" name="Nama_Mitra_Binaan"
+                                   value="{{ mitra.Nama_Mitra_Binaan if mitra else '' }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Alamat">Alamat</label>
+                            <textarea class="form-control" id="Alamat" name="Alamat" rows="3" required>{{ mitra.Alamat if mitra else '' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Provinsi">Provinsi</label>
+                                    <input type="text" class="form-control" id="Provinsi" name="Provinsi"
+                                           value="{{ mitra.Provinsi if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Kabupaten_Kota">Kabupaten/Kota</label>
+                                    <input type="text" class="form-control" id="Kabupaten_Kota" name="Kabupaten_Kota"
+                                           value="{{ mitra.Kabupaten_Kota if mitra else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Sektor_Ekonomi_BUMN">Sektor Ekonomi BUMN</label>
+                                    <input type="text" class="form-control" id="Sektor_Ekonomi_BUMN" name="Sektor_Ekonomi_BUMN"
+                                           value="{{ mitra.Sektor_Ekonomi_BUMN if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Jangka_Waktu">Jangka Waktu</label>
+                                    <input type="text" class="form-control" id="Jangka_Waktu" name="Jangka_Waktu"
+                                           value="{{ mitra.Jangka_Waktu if mitra else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Tanggal_Realisasi">Tanggal Realisasi</label>
+                                    <input type="date" class="form-control" id="Tanggal_Realisasi" name="Tanggal_Realisasi"
+                                           value="{{ mitra.Tanggal_Realisasi if mitra else '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Tanggal_Jatuh_Tempo">Tanggal Jatuh Tempo</label>
+                                    <input type="date" class="form-control" id="Tanggal_Jatuh_Tempo" name="Tanggal_Jatuh_Tempo"
+                                           value="{{ mitra.Tanggal_Jatuh_Tempo if mitra else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Jumlah_Realisasi_Rp">Jumlah Realisasi (Rp)</label>
+                                    <input type="number" step="0.01" class="form-control" id="Jumlah_Realisasi_Rp" name="Jumlah_Realisasi_Rp"
+                                           value="{{ mitra.Jumlah_Realisasi_Rp if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Outstanding_Rp">Outstanding (Rp)</label>
+                                    <input type="number" step="0.01" class="form-control" id="Outstanding_Rp" name="Outstanding_Rp"
+                                           value="{{ mitra.Outstanding_Rp if mitra else '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Kolektabilitas_BUMN">Kolektabilitas BUMN</label>
+                                    <select class="form-control" id="Kolektabilitas_BUMN" name="Kolektabilitas_BUMN" required>
+                                        <option value="">Pilih Kolektabilitas</option>
+                                        <option value="Lancar" {{ 'selected' if mitra and mitra.Kolektabilitas_BUMN == 'Lancar' else '' }}>Lancar</option>
+                                        <option value="Dalam Perhatian Khusus" {{ 'selected' if mitra and mitra.Kolektabilitas_BUMN == 'Dalam Perhatian Khusus' else '' }}>Dalam Perhatian Khusus</option>
+                                        <option value="Kurang Lancar" {{ 'selected' if mitra and mitra.Kolektabilitas_BUMN == 'Kurang Lancar' else '' }}>Kurang Lancar</option>
+                                        <option value="Diragukan" {{ 'selected' if mitra and mitra.Kolektabilitas_BUMN == 'Diragukan' else '' }}>Diragukan</option>
+                                        <option value="Macet" {{ 'selected' if mitra and mitra.Kolektabilitas_BUMN == 'Macet' else '' }}>Macet</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Tanggal_Lunas">Tanggal Lunas</label>
+                                    <input type="date" class="form-control" id="Tanggal_Lunas" name="Tanggal_Lunas"
+                                           value="{{ mitra.Tanggal_Lunas if mitra else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Jenis_Usaha">Jenis Usaha</label>
+                                    <input type="text" class="form-control" id="Jenis_Usaha" name="Jenis_Usaha"
+                                           value="{{ mitra.Jenis_Usaha if mitra else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Accrued_Interest">Accrued Interest</label>
+                                    <input type="number" step="0.01" class="form-control" id="Accrued_Interest" name="Accrued_Interest"
+                                           value="{{ mitra.Accrued_Interest if mitra else '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Angsuran_Bunga_yang_diterima_Giro_Bulanan">Angsuran Bunga yang diterima Giro Bulanan</label>
+                            <input type="number" step="0.01" class="form-control" id="Angsuran_Bunga_yang_diterima_Giro_Bulanan" name="Angsuran_Bunga_yang_diterima_Giro_Bulanan"
+                                   value="{{ mitra.Angsuran_Bunga_yang_diterima_Giro_Bulanan if mitra else '' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                {% if action == 'add' %}
+                                <i class="fas fa-save"></i> Simpan
+                                {% else %}
+                                <i class="fas fa-edit"></i> Update
+                                {% endif %}
+                            </button>
+                            <a href="{{ url_for('mitra_binaan') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Kembali
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
